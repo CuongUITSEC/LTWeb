@@ -4,6 +4,7 @@ import UserLayout from './components/Layout/UserLayout';
 import Home from './pages/Home';
 import LinenCollection from './pages/LinenCollection';
 import Auth from './pages/Auth';
+import SignupForm from './pages/SignupForm';
 
 const App = () => {
   return (
@@ -20,8 +21,10 @@ const App = () => {
         <Route path='/' element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path="linen" element={<LinenCollection />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/signup" element={<SignupForm />} />
         </Route>
-        <Route path="/auth" element={<Auth />} />
+
         <Route>
           {/* admin layout */}
         </Route>

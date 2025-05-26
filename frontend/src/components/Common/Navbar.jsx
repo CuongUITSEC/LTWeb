@@ -29,7 +29,7 @@ const Navbar = () => {
                     <button className='flex items-center gap-2.5 cursor-pointer'>
                         <span className='text-[14px] font-normal'>Liên hệ với chúng tôi</span>
                     </button>
-                    <Link to="/auth" className="hover:text-indigo-600 transition-colors">
+                    <Link to="/login">
                         <AiOutlineUser className='text-[20px]' />
                     </Link>
                     <Link to="/cart">
