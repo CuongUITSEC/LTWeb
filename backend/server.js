@@ -1,43 +1,37 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const session = require('express-session');
-const connectDB = require('./config/db'); // Connect to the database
-const userRoutes = require('./routes/userRoutes'); // Import user routes
-const productRoutes = require('./routes/productRoutes'); // Import product routes
-const cartRoutes = require('./routes/cartRoutes'); // Import cart routes 
-const checkoutRoutes = require('./routes/checkoutRoutes'); // Import checkout routes
-const authRoutes = require('./routes/authRoutes');
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+// Load env vars first
 dotenv.config();
 
-// Import passport config
-require('./config/passport');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const session = require('express-session');
 const passport = require('passport');
+const connectDB = require('./config/db');
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const checkoutRoutes = require('./routes/checkoutRoutes');
+const authRoutes = require('./routes/authRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const adminRoutes = require('./routes/adminRoutes'); 
+const productAdminRoutes = require('./routes/productAdminRoutes'); 
+const adminOrderRoutes = require('./routes/adminOrderRoutes');
 
-//console.log(process.env.PORT);
+const app = express();
 
-const PORT = process.env.PORT || 3000;
 // Connect to MongoDB
 connectDB();
 
-app.get('/', (req, res) => {
-    res.send('Hello from the server!');
-    });
-// Session configuration (cho Passport)
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'your_session_secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === 'production', // HTTPS trong production
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-  }));
-  const rateLimit = require('express-rate-limit');
+// Basic middleware - nên đặt trước các middleware khác
+app.use(express.json());
+app.use(cors());
+
+// Security middleware
+app.use(helmet());
 
 // Rate limiting
 const limiter = rateLimit({
@@ -45,29 +39,53 @@ const limiter = rateLimit({
     max: 100 // limit each IP to 100 requests per windowMs
 });
 
+// Apply rate limiting to all API requests
 app.use('/api/', limiter);
-const helmet = require('helmet');
-app.use(helmet());
+
+// Session configuration for Passport
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your_session_secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+
+// Import passport config
+require('./config/passport');
 
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-// Use user routes
-app.use('/api/users', userRoutes);
-// Use product routes
-app.use('/api/products', productRoutes);
-// Use cart routes
-app.use('/api/cart', cartRoutes);
-// Use checkout routes
-app.use('/api/checkout', checkoutRoutes);
-// Use auth routes
-app.use('/api/auth', authRoutes);
 
-// Error handling middleware
+// Routes
+app.get('/', (req, res) => {
+    res.send('Hello from the server!');
+});
+
+// API routes
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/checkout', checkoutRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/upload', uploadRoutes);
+
+// Admin routes
+app.use('/api/admin', adminRoutes); 
+app.use('/api/admin/products', productAdminRoutes);
+app.use('/api/admin/orders', adminOrderRoutes);
+
+// Error handling middleware - phải đặt sau tất cả các routes
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Internal Server Error' });
 });
+
+const PORT = process.env.PORT || 3000;
 
 // Start the server
 app.listen(PORT, () => {
