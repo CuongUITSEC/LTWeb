@@ -1,7 +1,7 @@
 const express = require('express');
 const Checkout = require('../models/Checkout');
 const { authMiddleware, isAdmin } = require('../middleware/authMiddleware');
-const Cart = require('../models/cart');
+const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 
