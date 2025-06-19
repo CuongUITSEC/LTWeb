@@ -60,9 +60,10 @@ router.post("/register", async (req, res) => {
     };
 
     // Chỉ gửi token trong response khi development (để frontend có thể sử dụng)
-    if (process.env.NODE_ENV === 'development') {
-      responseData.token = token;
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   responseData.token = token;
+    // }
+    responseData.token = token;
 
     res.status(201).json(responseData);
   } catch (error) {
@@ -123,6 +124,7 @@ router.post("/login", async (req, res) => {
         accountType: user.accountType,
         createdAt: user.createdAt,
       },
+      token: token
     };
 
     // Chỉ gửi token trong response khi development (để frontend có thể sử dụng)
