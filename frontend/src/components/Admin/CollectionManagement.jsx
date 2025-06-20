@@ -43,6 +43,21 @@ const CollectionManagement = () => {
     setFilteredCollections(searchResults);
   }, [searchTerm, collections]);
 
+  // const handleDelete = async (id) => {
+  //   if (window.confirm("Bạn có chắc chắn muốn xóa bộ sưu tập này không?")) {
+  //     try {
+  //       const userToken =
+  //         localStorage.getItem("userToken") || localStorage.getItem("token");
+  //       await axios.delete(`${API_URL}/api/collections/${id}`, {
+  //         headers: { Authorization: `Bearer ${userToken}` },
+  //       });
+  //       setCollections(collections.filter((c) => c._id !== id));
+  //       alert("Xóa bộ sưu tập thành công!");
+  //     } catch (err) {
+  //       alert("Xóa bộ sưu tập thất bại!");
+  //     }
+  //   }
+  // };
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa bộ sưu tập này không?")) {
       try {
@@ -51,8 +66,12 @@ const CollectionManagement = () => {
         await axios.delete(`${API_URL}/api/collections/${id}`, {
           headers: { Authorization: `Bearer ${userToken}` },
         });
-        setCollections(collections.filter((c) => c._id !== id));
         alert("Xóa bộ sưu tập thành công!");
+  
+        // Gọi lại API để refresh danh sách bộ sưu tập
+        const res = await axios.get(`${API_URL}/api/collections`);
+        setCollections(res.data || []);
+        setFilteredCollections(res.data || []);
       } catch (err) {
         alert("Xóa bộ sưu tập thất bại!");
       }

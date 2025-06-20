@@ -167,7 +167,7 @@ router.delete("/:id", async (req, res) => {
     const collection = await Collection.findOne({ id: req.params.id });
     if (!collection)
       return res.status(404).json({ message: "Không tìm thấy bộ sưu tập" });
-    await collection.remove();
+    await collection.deleteOne();
     res.json({ message: "Đã xóa bộ sưu tập" });
   } catch (err) {
     res.status(500).json({ message: err.message });
