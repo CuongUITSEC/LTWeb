@@ -6,7 +6,8 @@ const FeaturedCollection = ({ collections }) => {
     <div className="flex flex-col items-center">
       <div className="w-full grid grid-cols-1 gap-8">
         {collections.map((col) => {
-          const featured = col.products.filter((p) => p.isFeatured);
+          // Lấy 4 sản phẩm đầu tiên của BST
+          const featured = col.products.slice(0, 4);
           // if (featured.length === 0) return null;
           return (
             <div key={col.id} className="featured-collection overflow-hidden">
@@ -49,13 +50,13 @@ const FeaturedCollection = ({ collections }) => {
                           <p className="text-black font-medium text-lg">
                             {p.discountPrice
                               ? p.discountPrice.toLocaleString("vi-VN", {
-                                style: "currency",
-                                currency: "VND",
-                              })
+                                  style: "currency",
+                                  currency: "VND",
+                                })
                               : p.price.toLocaleString("vi-VN", {
-                                style: "currency",
-                                currency: "VND",
-                              })}
+                                  style: "currency",
+                                  currency: "VND",
+                                })}
                           </p>
                         </div>
                       </div>
