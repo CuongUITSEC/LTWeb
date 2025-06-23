@@ -3,13 +3,12 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
+import { API_URL } from "../utils/api";
 
 const GoogleCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:9000";
 
   useEffect(() => {
     const handleGoogleCallback = async () => {

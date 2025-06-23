@@ -1,3 +1,5 @@
+import { API_URL } from "./api";
+
 // Thông tin ngân hàng cho chuyển khoản
 export const BANK_INFO = {
   bankName: "MB Bank",
@@ -86,8 +88,8 @@ export async function fetchRecentTransactionsAndCheckPayment(
   amount,
   phone
 ) {
-  // Gọi API backend thay vì Google Apps Script trực tiếp để tránh CORS
   const API_URL =
+    API_URL +
     "/api/payment/check?orderCode=" +
     encodeURIComponent(orderCode) +
     "&amount=" +

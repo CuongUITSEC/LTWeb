@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-// Base URL for API
-const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:9000";
+import { API_URL } from "../../utils/api";
 
 // Retrieve user info and token from localStorage if available
 const userFromStorage = localStorage.getItem("userInfo")
@@ -65,8 +63,9 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("userToken") || localStorage.getItem("token");
-      
+      const token =
+        localStorage.getItem("userToken") || localStorage.getItem("token");
+
       if (token) {
         // Gọi API logout backend
         await axios.post(
@@ -86,7 +85,7 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem("userToken");
       localStorage.removeItem("token");
       localStorage.removeItem("cart");
-      
+
       return { message: "Đăng xuất thành công" };
     } catch (error) {
       // Dù có lỗi API vẫn xóa localStorage
@@ -94,9 +93,11 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem("userToken");
       localStorage.removeItem("token");
       localStorage.removeItem("cart");
-      
+
       console.error("Logout error:", error);
-      return rejectWithValue(error.response?.data?.message || "Lỗi khi đăng xuất");
+      return rejectWithValue(
+        error.response?.data?.message || "Lỗi khi đăng xuất"
+      );
     }
   }
 );
@@ -172,13 +173,13 @@ const authSlice = createSlice({
       localStorage.removeItem("userToken");
       localStorage.removeItem("token");
       localStorage.removeItem("cart");
-      
+
       state.userInfo = null;
       state.userToken = null;
       state.loading = false;
       state.error = null;
       state.success = false;
-      
+
       // Generate new guest ID on logout
       state.guestId = `guest_${Date.now()}_${Math.random()
         .toString(36)
@@ -257,7 +258,7 @@ const authSlice = createSlice({
         state.userToken = null;
         state.error = null;
         state.success = false;
-        
+
         // Generate new guest ID
         state.guestId = `guest_${Date.now()}_${Math.random()
           .toString(36)
@@ -270,7 +271,7 @@ const authSlice = createSlice({
         state.userInfo = null;
         state.userToken = null;
         state.error = null;
-        
+
         // Generate new guest ID
         state.guestId = `guest_${Date.now()}_${Math.random()
           .toString(36)
