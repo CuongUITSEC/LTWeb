@@ -88,7 +88,7 @@ export async function fetchRecentTransactionsAndCheckPayment(
   amount,
   phone
 ) {
-  const API_URL =
+  const apiUrl =
     API_URL +
     "/api/payment/check?orderCode=" +
     encodeURIComponent(orderCode) +
@@ -97,7 +97,7 @@ export async function fetchRecentTransactionsAndCheckPayment(
     "&phone=" +
     encodeURIComponent(phone);
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(apiUrl);
     if (!res.ok)
       throw new Error("Không thể lấy dữ liệu giao dịch từ API backend");
     const data = await res.json();
